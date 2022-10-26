@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from pathlib import Path
 import os
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -24,13 +25,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Application definition
 
 INSTALLED_APPS = [
+	'accounts.apps.AccountsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-	'listings.apps.ListingsConfig'
+	'listings.apps.ListingsConfig',
+	'cart.apps.CartConfig',
+	'orders.apps.OrdersConfig',
 ]
 
 MIDDLEWARE = [
@@ -48,7 +52,7 @@ ROOT_URLCONF = 'finesauces_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -56,6 +60,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+				'finesauces_project.context_processors.cart',
             ],
         },
     },
@@ -103,6 +108,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
@@ -110,7 +116,19 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+CART_ID = 'cart'
 try:
 	from .local_settings import *
 except ImportError:
 	pass
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST ='infosoftbd'
+EMAIL_HOST_USER ='info@infosoftbd.site'
+EMAIL_HOST_PASSWORD ='Rakib@123'
+EMAIL_PORT ='465'
+EMAIL_USE_SSL ='mail.infosoftbd.site'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'listings:product_list'
+LOGOUT_REDIRECT_URL = 'listings:product_list'
